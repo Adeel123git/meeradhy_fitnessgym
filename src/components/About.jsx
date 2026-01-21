@@ -1,103 +1,131 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Target, Zap, Shield, Heart } from 'lucide-react';
+import { Target, Zap, Dumbbell, Trophy } from 'lucide-react';
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
-  useEffect(() => {
-    // Parallax background text animation
-    gsap.to(".about-bg-text", {
-      xPercent: -20,
-      scrollTrigger: {
-        trigger: ".about-container",
-        scrub: 1,
-      }
-    });
+  const containerRef = useRef(null);
 
-    // Cards staggered entrance
-    gsap.from(".feature-card", {
-      y: 60,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.2,
-      scrollTrigger: {
-        trigger: ".about-content",
-        start: "top 80%",
-      }
-    });
+  useEffect(() => {
+    // GSAP context is best for React to avoid memory leaks
+    let ctx = gsap.context(() => {
+      
+      // 1. Image Reveal (Inset animation)
+      gsap.from(".reveal-img", {
+        clipPath: "inset(100% 0% 0% 0%)",
+        duration: 1.5,
+        ease: "power4.inOut",
+        scrollTrigger: {
+          trigger: ".reveal-img",
+          start: "top 80%",
+        }
+      });
+
+      // 2. Text Content Reveal
+      gsap.from(".animate-text", {
+        x: -50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".about-text-content",
+          start: "top 75%",
+        }
+      });
+
+      // 3. Stats Scale Up
+      gsap.from(".stat-box", {
+        scale: 0.8,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: ".stats-grid",
+          start: "top 90%",
+        }
+      });
+    }, containerRef); // Scope to container
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section className="about-container relative min-h-screen bg-transparent text-white py-24 overflow-hidden">
-
-      {/* 1. HUGE BACKGROUND SCROLLING TEXT (The "Vibe" Maker) */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 whitespace-nowrap opacity-[0.03] select-none pointer-events-none">
-        <h2 className="about-bg-text text-[25vw] font-black italic uppercase italic">
-          ESTABLISHED 2026 • SYNDICATE • ESTABLISHED 2026 • SYNDICATE
-        </h2>
+    <section ref={containerRef} className="relative min-h-screen bg-black py-24 overflow-hidden flex items-center">
+      
+      {/* Background Watermark */}
+      <div className="absolute top-10 left-10 opacity-[0.02] select-none pointer-events-none">
+        <h2 className="text-[30vw] font-black italic leading-none">ELITE</h2>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           
-          {/* LEFT: THE STORY & ATTITUDE */}
-          <div className="about-content space-y-8">
-            <div className="inline-block px-4 py-1 border border-red-600 rounded-full text-red-600 text-xs font-black uppercase tracking-widest">
-              Our DNA
+          {/* LEFT SIDE: IMAGES */}
+          <div className="lg:col-span-6 relative">
+            <div className="reveal-img relative rounded-[40px] overflow-hidden border border-white/10 group">
+              <img 
+                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop" 
+                alt="Gym" 
+                className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+              
+              <div className="absolute bottom-10 left-10 bg-red-600 p-6 rounded-3xl shadow-2xl rotate-[-5deg]">
+                <Dumbbell size={40} className="text-white mb-2" />
+                <p className="font-black italic text-xl uppercase tracking-tighter">Premium <br/> Equipment</p>
+              </div>
             </div>
-            <h2 className="text-6xl md:text-8xl font-black italic uppercase leading-none">
-              WE ARE <br /> <span className="text-red-600">SYNDICATE</span>
-            </h2>
-            <p className="text-zinc-400 text-lg md:text-xl font-bold italic leading-relaxed max-w-xl">
-              Ye koi normal gym nahi hai. Ye ek <span className="text-white underline decoration-red-600 underline-offset-8">War Room</span> hai. Humne isay un logon ke liye banaya hai jo comfort zone se nafrat karte hain. 
-            </p>
             
-            <div className="flex gap-10 border-t border-zinc-900 pt-10">
-              <div>
-                <h4 className="text-4xl font-black italic">100+</h4>
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Machines</p>
-              </div>
-              <div>
-                <h4 className="text-4xl font-black italic text-red-600">0%</h4>
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Excuses</p>
-              </div>
-            </div>
+            {/* Small Floating Image
+            <div className="hidden lg:block absolute -right-10 -bottom-10 w-64 h-64 rounded-[30px] overflow-hidden border-4 border-black shadow-2xl reveal-img">
+               <img 
+                src="https://images.unsplash.com/photo-1541534741688-6078c65b5a33?q=80&w=2070&auto=format&fit=crop" 
+                alt="" 
+                className="w-full h-full object-cover"
+              />
+            </div> */}
           </div>
 
-          {/* RIGHT: THE "PUSHUP" FEATURE GRID (No Image Needed) */}
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { title: "Mission", icon: <Target />, desc: "Transforming the weak into warriors.", color: "bg-zinc-900" },
-              { title: "Power", icon: <Zap />, desc: "Explosive workouts, every day.", color: "bg-red-600" },
-              { title: "Safe", icon: <Shield />, desc: "Elite recovery & coaching.", color: "bg-zinc-900" },
-              { title: "Vibe", icon: <Heart />, desc: "Community of iron addicts.", color: "bg-zinc-900" },
-            ].map((item, i) => (
-              <div 
-                key={i} 
-                className={`feature-card ${item.color} p-8 rounded-[30px] flex flex-col justify-between h-64 hover:scale-95 transition-all duration-500 cursor-default group`}
-              >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${item.color === 'bg-red-600' ? 'bg-white text-red-600' : 'bg-red-600 text-white shadow-lg shadow-red-900/40'}`}>
-                  {item.icon}
+          {/* RIGHT SIDE: CONTENT */}
+          <div className="lg:col-span-6 about-text-content space-y-8">
+            <div className="animate-text inline-flex items-center gap-3">
+               <div className="w-12 h-[2px] bg-red-600"></div>
+               <span className="text-red-600 font-black uppercase tracking-[0.3em] text-sm">Est. 2026 Syndicate</span>
+            </div>
+
+            <h2 className="animate-text text-7xl md:text-9xl font-black italic uppercase leading-[0.8] tracking-tighter">
+              BORN <br /> TO <span className="text-red-600">CONQUER</span>
+            </h2>
+
+            <p className="animate-text text-zinc-400 text-xl md:text-2xl font-bold italic leading-tight max-w-xl">
+              "Syndicate is not just a gym; it's an underground movement."
+            </p>
+
+            {/* Stats */}
+            <div className="stats-grid grid grid-cols-2 gap-6 pt-10 border-t border-zinc-900">
+              <div className="stat-box">
+                <div className="flex items-center gap-3 text-red-600 mb-2">
+                  <Target size={24} />
+                  <span className="font-black italic uppercase tracking-widest text-xs text-zinc-500">Focus</span>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-black italic uppercase mb-2">{item.title}</h3>
-                  <p className="text-[10px] font-bold text-zinc-300 uppercase leading-tight opacity-0 group-hover:opacity-100 transition-opacity">
-                    {item.desc}
-                  </p>
-                </div>
+                <h4 className="text-4xl font-black italic uppercase">Hypertrophy</h4>
               </div>
-            ))}
+              
+              <div className="stat-box">
+                <div className="flex items-center gap-3 text-red-600 mb-2">
+                  <Trophy size={24} />
+                  <span className="font-black italic uppercase tracking-widest text-xs text-zinc-500">Level</span>
+                </div>
+                <h4 className="text-4xl font-black italic uppercase">Elite Only</h4>
+              </div>
+            </div>
           </div>
 
         </div>
       </div>
-
-      {/* 3. FLOATING RED SPARK (To cover empty black space) */}
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-red-600/10 blur-[120px] rounded-full animate-pulse"></div>
     </section>
   );
 };

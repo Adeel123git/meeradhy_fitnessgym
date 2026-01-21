@@ -1,24 +1,39 @@
 @import "tailwindcss";
-/* Puray layout se extra scroll khatam karne ke liye */
-/* Double scroll rokne ke liye sabse zaroori code */
-html, body {
+
+html {
+  /* overflow-y: scroll hamesha ek single scrollbar dikhayega */
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  scrollbar-gutter: stable;
+  background-color: black;
+}
+
+body {
   margin: 0;
   padding: 0;
   width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden !important; /* Side scroll ko khatam karta hai */
-  position: relative;
-}
-
-#root {
   overflow-x: hidden !important;
 }
-/* Har element se default cursor aur pointer hath ko hatane ke liye */
-* {
-  cursor: none !important;
+
+/* --- SCROLLBAR LOOK --- */
+/* Scrollbar ki width thodi kam rakhte hain taaki premium lage */
+::-webkit-scrollbar {
+  width: 8px; 
 }
 
-/* Khas taur par links aur buttons ke liye */
-a, button, [role="button"], input, select {
-  cursor: none !important;
+/* Scrollbar ka pichla hissa (Track) */
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+/* Scrollbar ka chalta hua hissa (Thumb) */
+::-webkit-scrollbar-thumb {
+  background: #dc2626; /* Gym Red Theme */
+  border-radius: 10px;
+  border: 2px solid #000000; /* Isse thumb track se alag dikhega */
+}
+
+/* Hover karne par color thoda bright ho jaye */
+::-webkit-scrollbar-thumb:hover {
+  background: #ef4444;
 }

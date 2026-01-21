@@ -37,3 +37,18 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #ef4444;
 }
+/* Poori website se default cursor khatam */
+* {
+  cursor: none !important;
+}
+
+/* Khas taur par links, buttons aur inputs par jo haath (pointer) aata hai usay bhi block karein */
+a, 
+button, 
+input, 
+select, 
+textarea, 
+[role="button"],
+.cursor-pointer {
+  cursor: none !important;
+}
